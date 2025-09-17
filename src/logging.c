@@ -1,3 +1,4 @@
+
 #include <windows.h>
 #include <wchar.h>
 #include "logging.h"

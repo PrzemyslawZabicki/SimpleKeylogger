@@ -20,6 +20,6 @@
 #define REGISTRY_STARTUP_PATH	(L"Software\\Microsoft\\Windows\\CurrentVersion\\Run")
 #define REGISTRY_STARTUP_KEY	(L"SuperInnocentKeylogger")
 /***************** SUICIDE **************/
-#define SUICIDE_TIME_YEAR		(2019)
-#define SUICIDE_TIME_MONTH		(1)
-#define SUICIDE_TIME_DAY		(1)
+#define SUICIDE_TIME_YEAR		(2026)
+#define SUICIDE_TIME_MONTH		(9)
+#define SUICIDE_TIME_DAY		(17)

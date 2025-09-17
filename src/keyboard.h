@@ -1,3 +1,4 @@
+
 #pragma once
 #include <windows.h>
 #include <wchar.h>
@@ -17,7 +18,7 @@ static DWORD const dwMapOEMSymbols1_End				= 0xC0;
 //												   0xDB 0xDC  0xDD 0xDE
 //	OEM_[X] <--										 4    5     6    7  
 static char const cMapOEMSymbols_2[]			= { '[', '\\', ']', '\"' };
-static char const cMapOEMShiftSymbols_2[]		= { '{', '|',  '}', "'" };
+static char const cMapOEMShiftSymbols_2[]		= { '{', '|',  '}', '\'' };
 static DWORD const dwMapOEMSymbols2_Start		= 0xDB;
 static DWORD const dwMapOEMSymbols2_End			= 0xDE;
 
@@ -33,4 +34,4 @@ static WCHAR * wcWrapperSuffix = L"]";
 //	in the relevant language.
 // VirtualKey Codes: https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes
 // Will return True if translation was made, otherwise false (for example in case of a single shift pressed)
-BOOL GetActualKeyDescription(__in KBDLLHOOKSTRUCT *keyboardStruct, __in DWORD dwKeyDescriptionSize, __out LPCSTR wcKeyDescription);
+BOOL GetActualKeyDescription(KBDLLHOOKSTRUCT *keyboardStruct, DWORD dwKeyDescriptionSize, LPCWSTR wcKeyDescription);

